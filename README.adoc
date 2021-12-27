@@ -1,0 +1,16 @@
+# Backend Local stack
+
+This is the backbone for the webservices I test. They communicate via the docker network called "veille".
+* `docker network create veille`
+
+In this local stack, there is a reverse proxy that parse the url and do some redirection based on subdirectory name. The subdirectory must be the container name that you want to access.
+
+In order to match the pattern expected, you must do the main request with the url 'veille.bzh'.
+In your '/etc/hosts', add the following line:
+* `127.0.0.1 veille.bzh`
+
+The webservices that can be used are the following:
+
+* gateway
+* users
+

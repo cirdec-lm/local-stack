@@ -17,6 +17,7 @@ services:
     restart: always
     environment:
       - VCAP_APP_PORT=8080
+      - ME_CONFIG_SITE_BASEURL=/mongo-ui
     ports:
       - 8080
 

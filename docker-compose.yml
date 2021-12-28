@@ -5,6 +5,8 @@ services:
 
   nats-ui:
     image: sphqxe/nats-webui:latest
+    ports:
+      - 80
 
   whoami:
     image: containous/whoami

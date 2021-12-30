@@ -32,6 +32,8 @@ services:
 
   reverse-proxy:
     image: nginx
+    depends_on:
+      - nats
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:

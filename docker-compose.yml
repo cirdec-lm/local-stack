@@ -1,12 +1,11 @@
 services:
 
   nats:
-    image: nats
-
-  nats-ui:
-    image: sphqxe/nats-webui:latest
+    image: nats:2.7.0-alpine
     ports:
-      - 80
+      - 8080
+    volumes:
+      - ./nats-server.conf:/etc/nats/nats-server.conf:ro
 
   mongo:
     image: mongo

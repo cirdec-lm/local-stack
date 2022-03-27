@@ -29,6 +29,34 @@ services:
     ports:
       - 8080
 
+  openldap:
+    # https://github.com/tiredofit/docker-openldap-fusiondirectory/blob/2.4-1.4/install/assets/custom-scripts/001-install-fusiondirectory.sh
+    image: tiredofit/openldap-fusiondirectory:2.6-1.4-latest
+    environment:
+      - DOMAIN=veille.bzh
+      - BASE_DN=dc=veille,dc=bzh
+      - ADMIN_PASS=password
+      - FUSIONDIRECTORY_ADMIN_USER=fd-admin
+      - FUSIONDIRECTORY_ADMIN_PASS=password
+    ports:
+      - 389:389
+    volumes:
+      - ./data/openldap/varlibopenldap:/var/lib/openldap
+      - ./data/openldap/backup:/data/backup
+
+  fusiondirectory:
+    image: tiredofit/fusiondirectory:1.4-latest
+    environment:
+      - LDAP1_NAME=Production
+      - LDAP1_HOST=openldap
+      - LDAP1_PORT=389
+      - LDAP1_BASE_DN=dc=veille,dc=bzh
+      - LDAP1_ADMIN_DN=cn=admin,dc=veille,dc=bzh
+      - LDAP1_ADMIN_PASS=password
+      - NGINX_LISTEN_PORT=8080
+    ports:
+      - 8080
+
   reverse-proxy:
     image: nginx
     depends_on:

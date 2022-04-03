@@ -41,7 +41,8 @@ services:
     ports:
       - 389:389
     volumes:
-      - ./data/openldap/varlibopenldap:/var/lib/openldap
+      - ./data/openldap/data:/var/lib/openldap
+      - ./data/openldap/config:/etc/openldap/slapd.d
       - ./data/openldap/backup:/data/backup
 
   fusiondirectory:
@@ -63,9 +64,10 @@ services:
       - nats
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./data/certs:/etc/nginx/certs
     ports:
       - 80:80
-
+      - 443:443
 networks:
   default:
     external: true

@@ -58,6 +58,27 @@ services:
     ports:
       - 8080
 
+  mariadb:
+    image: mariadb:10.8-rc
+    restart: always
+    user: $UID:$GUID
+    environment:
+      - MARIADB_ROOT_PASSWORD=mariadb-admin
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=false
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+  adminer:
+    image: adminer
+    restart: always
+    user: $UID:$GUID
+    environment:
+      - ADMINER_DEFAULT_SERVER=mariadb
+    ports:
+      - 8080
+
   reverse-proxy:
     image: nginx
     depends_on:

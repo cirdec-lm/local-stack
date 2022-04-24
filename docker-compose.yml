@@ -47,6 +47,8 @@ services:
 
   fusiondirectory:
     image: tiredofit/fusiondirectory:1.4-latest
+    depends_on:
+      - reverse-proxy
     environment:
       - LDAP1_NAME=Production
       - LDAP1_HOST=openldap
@@ -63,8 +65,10 @@ services:
     restart: always
     user: $UID:$GUID
     environment:
-      - MARIADB_ROOT_PASSWORD=mariadb-admin
+      - MARIADB_ROOT_PASSWORD=mariadb-password
       - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=false
+      - MARIADB_USER=mariadb-admin
+      - MARIADB_PASSWORD=mariadb-password
     volumes:
       - ./data/mariadb:/var/lib/mysql
     ports:
@@ -73,9 +77,29 @@ services:
   adminer:
     image: adminer
     restart: always
+    depends_on:
+      - reverse-proxy
+      - mariadb
     user: $UID:$GUID
     environment:
       - ADMINER_DEFAULT_SERVER=mariadb
+    ports:
+      - 8080
+
+  keycloak:
+    image: jboss/keycloak:16.1.1
+    restart: always
+    depends_on:
+      - mariadb
+      - reverse-proxy
+    environment:
+      - KEYCLOAK_USER=keycloak-admin
+      - KEYCLOAK_PASSWORD=keycloak-password
+      - DB_VENDOR=mariadb
+      - DB_PORT=3306
+      - DB_USER=mariadb-admin
+      - DB_PASSWORD=mariadb-password
+      - KEYCLOAK_FRONTEND_URL=https://veille.bzh/keycloak/auth
     ports:
       - 8080
 
